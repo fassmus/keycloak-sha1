@@ -1,20 +1,27 @@
 version: '3'
 
 services:
-  ldap:
-    image: osixia/openldap:1.2.4
-    hostname: ldap
-    volumes:
-      - ./data/ldap/data:/var/lib/ldap:Z
-      - ./data/ldap/config:/etc/ldap/slapd.d:Z
-    environment:
-      LDAP_ADMIN_PASSWORD: "Admin123"
-      LDAP_TLS: "false"
-      LDAP_ORGANISATION: "Robert Koch-Institut"
-      LDAP_DOMAIN: "intensivregister.de"
+  # ldap:
+  #   image: osixia/openldap:1.2.4
+  #   hostname: ldap
+  #   volumes:
+  #     - ./data/ldap/data:/var/lib/ldap:Z
+  #     - ./data/ldap/config:/etc/ldap/slapd.d:Z
+  #   environment:
+  #     LDAP_ADMIN_PASSWORD: "Admin123"
+  #     LDAP_TLS: "false"
+  #     LDAP_ORGANISATION: "Robert Koch-Institut"
+  #     LDAP_DOMAIN: "intensivregister.de"
+  #   ports:
+  #     - 389:389
+  #   restart: always
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
     ports:
-      - 389:389
-    restart: always
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
   mysql:
     image: mysql:5.7
     volumes:
@@ -38,8 +45,13 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       JDBC_PARAMS: "characterEncoding=UTF-8&useSSL=false&requireSSL=false&autoReconnect=true&useLegacyDatetimeCode=false&serverTimezone=UTC&connectTimeout=30000"
+      DEBUG: "true"
+      DEBUG_PORT: "*:8787"
+    volumes:
+      - /Users/fassmus/DEV/IR_GitHub/intensivregister-keycloak-theme:/opt/jboss/keycloak/themes/intensivregister
     depends_on:
       - mysql
-      - ldap
+      # - ldap
     ports:
       - 8080:8080
+      - 8787:8787

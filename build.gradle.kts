@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     val jbossLoggingVersion = "3.4.1.Final"
-    val keycloakVersion = "10.0.2"
+    val keycloakVersion = "15.0.1"
 
     // JBoss
     compileOnly("org.jboss.logging:jboss-logging:$jbossLoggingVersion")
